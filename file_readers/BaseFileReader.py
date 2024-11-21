@@ -14,8 +14,5 @@ class BaseFileReader:
     def merge_dfs(self, first_df, second_df, on_column):
         return pd.merge(first_df, second_df, on=on_column)
 
-    def only_keep_columns(self, df, columns):
-        return df[columns]
-
     def __to_full_path(self, file):
         return self.__folder_path + file

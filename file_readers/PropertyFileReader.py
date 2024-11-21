@@ -14,17 +14,7 @@ class PropertyFileReader(BaseFileReader):
         self.__property_id_column = "property_id"
         self.__property_type_id_column = "prop_desc_id"
         self.__property_value_column = "property_value"
-        self.__property_description_column = "prop_desc_name"
         self.__property_loss_id = "prop_loss_id"
-        self.__property_loss_name = "prop_loss_name"
-
-        self.__columns_to_keep = [
-            self.incident_id_column,
-            self.__property_id_column,
-            self.__property_value_column,
-            self.__property_description_column,
-            self.__property_loss_name,
-        ]
 
     def get_property_df(self):
         property_mapping_df = self.__get_property_mapping_df()
@@ -37,7 +27,6 @@ class PropertyFileReader(BaseFileReader):
             merged_df, property_type_df, self.__property_type_id_column)
         merged_df = self.merge_dfs(
             merged_df, property_loss_df, self.__property_loss_id)
-        merged_df = self.only_keep_columns(merged_df, self.__columns_to_keep)
         merged_df = self.__clear_unset_property_values(merged_df)
         return merged_df
 
