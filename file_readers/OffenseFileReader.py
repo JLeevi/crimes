@@ -12,6 +12,7 @@ class OffenseFileReader(BaseFileReader):
         self.__offense_code_column = "offense_code"
 
     def merge_offense_to_df(self, to_df):
+        assert self.incident_id_column in to_df.columns
         offense_df = self.__get_offense_df()
         return self.merge_dfs(to_df, offense_df, self.incident_id_column)
 
