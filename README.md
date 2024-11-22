@@ -37,6 +37,16 @@ make start
 
 Starts an airflow server at `http://localhost:8080/`, along with a postgres database.
 
+### Copy dependencies from the container for local development
+
+```bash
+make copy-dependencies
+```
+
+This copies the container dependencies to the ./local_dependencies directory.
+
+This makes autocomplete and other stuff work with the dependencies while developing locally.
+
 ### Stop the project
 
 ```bash
