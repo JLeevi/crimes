@@ -1,5 +1,5 @@
 import pandas as pd
-from file_readers.BaseFileReader import BaseFileReader
+from .BaseFileReader import BaseFileReader
 
 
 class PropertyFileReader(BaseFileReader):
