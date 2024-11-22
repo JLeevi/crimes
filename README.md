@@ -2,7 +2,13 @@
 
 in progress...
 
-**to use the current notebook, you need to download the FBI crime data**:
+---
+
+Currently, the main data exploration work is in the `main.ipynb` notebook.
+
+### Download the data
+
+**To use the current notebook, you need to download the FBI crime data**:
 
 1. Go to https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
 2. Scroll to section "Crime Incident-Based Data by State"
@@ -18,3 +24,23 @@ data
     ├── ...
 └── main.ipynb
 ```
+
+---
+
+## Instructions for running the project
+
+### Start the project
+
+```bash
+make start
+```
+
+Starts an airflow server at `http://localhost:8080/`, along with a postgres database.
+
+### Stop the project
+
+```bash
+make stop
+```
+
+stops and removes all the project's docker containers.
