@@ -2,13 +2,9 @@
 
 in progress...
 
----
+## Instructions for running the project
 
-Currently, the main data exploration work is in the `main.ipynb` notebook.
-
-### Download the data
-
-**To use the current notebook, you need to download the FBI crime data**:
+#### 1. Download the FBI crime data
 
 1. Go to https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
 2. Scroll to section "Crime Incident-Based Data by State"
@@ -22,22 +18,26 @@ data
     ├── agencies.csv
     ├── NIBRS_ACTIVITY_TYPE.csv
     ├── ...
-└── main.ipynb
+├── ...
+├── dags
+├── file_readers
+└── handlers
 ```
 
----
-
-## Instructions for running the project
-
-### Start the project
+#### 2. Start the project
 
 ```bash
 make start
 ```
 
-Starts an airflow server at `http://localhost:8080/`, along with a postgres database.
+- Creates a docker container with the project's dependencies.
+- Starts an airflow server at `http://localhost:8080/`, along with a postgres database.
 
-### Copy dependencies from the container for local development
+Go to the url to view the available DAGs and run them.
+
+Username and password for airflow are defined in the `.env` file.
+
+#### 3. Copy dependencies from the container for local development
 
 ```bash
 make copy-dependencies
@@ -47,10 +47,10 @@ This copies the container dependencies to the ./local_dependencies directory.
 
 This makes autocomplete and other stuff work with the dependencies while developing locally.
 
-### Stop the project
+#### 4. Stop the project
 
 ```bash
 make stop
 ```
 
-stops and removes all the project's docker containers.
+When done, run this to stop and remove all the project's docker containers.
