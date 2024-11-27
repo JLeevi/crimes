@@ -12,7 +12,7 @@ class FilePaths:
     airflow_path = "/opt/airflow"
     data_folder_path = airflow_path + "/data/"
 
-    crime_csv_path = data_folder_path + "crimes.csv"
+    crime_parquet_path = data_folder_path + "crimes.parquet"
 
 
 @dag(
@@ -22,22 +22,22 @@ class FilePaths:
 )
 def crime_dag():
 
-    @task()
-    def dummy_start():
+    @task(task_id="start")
+    def _dummy_start():
         pass
 
-    @task()
-    def create_and_save_crime_csv(file_paths):
+    @task(task_id="create_and_save_crime_csv")
+    def _create_and_save_crime_parquet():
         dataframe = read_and_combine_data_to_single_dataframe()
-        dataframe.to_csv(file_paths.crime_csv_path, index=False)
+        dataframe.to_parquet(FilePaths.crime_parquet_path, index=False)
 
-    @task()
-    def dummy_end():
+    @task(task_id="end")
+    def _dummy_end():
         pass
 
-    start = dummy_start()
-    process = create_and_save_crime_csv(FilePaths)
-    end = dummy_end()
+    start = _dummy_start()
+    process = _create_and_save_crime_parquet()
+    end = _dummy_end()
 
     start >> process >> end
 
