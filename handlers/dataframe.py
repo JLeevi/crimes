@@ -23,6 +23,8 @@ def read_and_combine_data_to_single_dataframe():
     return dataframe
 
 
-def drop_duplicate_incidents(parquet_path):
+def drop_duplicate_and_nan_incidents(parquet_path):
     dataframe = pd.read_parquet(parquet_path)
-    return dataframe.drop_duplicates(subset=["incident_id"])
+    dataframe = dataframe.drop_duplicates(subset=["incident_id"])
+    dataframe = dataframe.dropna(subset=["incident_id"])
+    return dataframe
