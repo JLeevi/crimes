@@ -1,3 +1,4 @@
+import pandas as pd
 from file_readers.PropertyFileReader import PropertyFileReader
 from file_readers.OffenseFileReader import OffenseFileReader
 from file_readers.LocationFileReader import LocationFileReader
@@ -20,3 +21,8 @@ def read_and_combine_data_to_single_dataframe():
     dataframe = dataframe.sort_values(by="property_value", ascending=False)
 
     return dataframe
+
+
+def drop_duplicate_incidents(parquet_path):
+    dataframe = pd.read_parquet(parquet_path)
+    return dataframe.drop_duplicates(subset=["incident_id"])
