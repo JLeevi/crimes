@@ -1,10 +1,10 @@
 .PHONY: start stop copy-dependencies ssh-container
 
 start:
-	docker compose up
+	docker-compose up
 
 stop:
-	docker compose down
+	docker-compose down
 
 copy-dependencies:
 	docker cp crimes-airflow-webserver-1:/home/airflow/.local/lib/python3.8/site-packages ./local_dependencies
