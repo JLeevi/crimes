@@ -1,64 +1,69 @@
+import os
 import sys
+
+# Ensure the Airflow directory is in PYTHONPATH
+os.environ["PYTHONPATH"] = "/opt/airflow:" + os.environ.get("PYTHONPATH", "")
 if "/opt/airflow" not in sys.path:
     sys.path.append("/opt/airflow")
 
-
 import airflow
-from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns
+from handlers.dataframe import (
+    read_and_combine_crime_data, read_offender_data, read_victim_data, 
+    read_relationship_data
+)
 from airflow.decorators import dag, task
-
 
 class FilePaths:
     airflow_path = "/opt/airflow"
     data_folder_path = airflow_path + "/data/"
 
-    crime_parquet_path = data_folder_path + "crimes.parquet"
-    crime_parquet_no_duplicates_path = data_folder_path + "crimes_no_duplicates.parquet"
-    crime_parquet_columns_of_interest = data_folder_path + \
-        "crime_parquet_columns_of_interest.parquet"
-
+    crimes_parquet_path = data_folder_path + "crimes.parquet"
+    offender_parquet_path = data_folder_path + "offender.parquet"
+    victim_parquet_path = data_folder_path + "victim.parquet"
+    relationship_parquet_path = data_folder_path + "relationship.parquet"
 
 @dag(
     schedule=None,
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False
 )
-def crime_dag():
+def crime_data_dag():
 
     @task(task_id="start")
     def _dummy_start():
         pass
 
-    @task(task_id="create_and_save_crime_csv")
-    def _create_and_save_crime_parquet():
-        dataframe = read_and_combine_data_to_single_dataframe()
-        dataframe.to_parquet(FilePaths.crime_parquet_path, index=False)
+    @task(task_id="create_and_save_crimes_parquet")
+    def _create_and_save_crimes_parquet():
+        dataframe = read_and_combine_crime_data()
+        dataframe.to_parquet(FilePaths.crimes_parquet_path, index=False)
 
-    @task(task_id="drop_duplicate_and_nan_incidents")
-    def _drop_duplicate_and_nan_incidents(parquet_path):
-        dataframe = drop_duplicate_and_nan_incidents(parquet_path)
-        dataframe.to_parquet(
-            FilePaths.crime_parquet_no_duplicates_path, index=False)
+    @task(task_id="create_and_save_offender_parquet")
+    def _create_and_save_offender_parquet():
+        dataframe = read_offender_data()
+        dataframe.to_parquet(FilePaths.offender_parquet_path, index=False)
 
-    @task(task_id="drop_unnecessary_columns")
-    def _drop_unnecessary_columns(parquet_path):
-        dataframe = drop_unnecessary_columns(parquet_path)
-        dataframe.to_parquet(
-            FilePaths.crime_parquet_columns_of_interest, index=False)
+    @task(task_id="create_and_save_victim_parquet")
+    def _create_and_save_victim_parquet():
+        dataframe = read_victim_data()
+        dataframe.to_parquet(FilePaths.victim_parquet_path, index=False)
+
+    @task(task_id="create_and_save_relationship_parquet")
+    def _create_and_save_relationship_parquet():
+        dataframe = read_relationship_data()
+        dataframe.to_parquet(FilePaths.relationship_parquet_path, index=False)
 
     @task(task_id="end")
     def _dummy_end():
         pass
 
     start = _dummy_start()
-    process = _create_and_save_crime_parquet()
-    drop_duplicates = _drop_duplicate_and_nan_incidents(
-        FilePaths.crime_parquet_path)
-    drop_useless_columns = _drop_unnecessary_columns(
-        FilePaths.crime_parquet_no_duplicates_path)
+    crimes_task = _create_and_save_crimes_parquet()
+    offender_task = _create_and_save_offender_parquet()
+    victim_task = _create_and_save_victim_parquet()
+    relationship_task = _create_and_save_relationship_parquet()
     end = _dummy_end()
 
-    start >> process >> drop_duplicates >> drop_useless_columns >> end
+    start >> [crimes_task, offender_task, victim_task, relationship_task] >> end
 
-
-crime_dag()
+crime_data_dag()

@@ -1,27 +1,68 @@
-columns_for_property_value_analysis = [
+# Columns for crimes.parquet
+columns_for_crimes = [
     'incident_id',
-    'property_value',
-    'prop_desc_name',
-    'prop_loss_desc',
-    'crime_against',
-    'offense_category_name',
+    'data_year',
+    'offense_code',
+    'offense_name',
+    'location_id',
     'location_name',
-    'criminal_act_name',
-    'age_num',
-    'race_desc',
-    'sex_code'
+    'property_description',
+    'property_value'
 ]
 
+# Columns for offender.parquet
+columns_for_offender = [
+    'incident_id',
+    'offender_id',
+    'age_num',
+    'sex_code',
+    'race_id',
+    'ethnicity_id'
+]
+
+# Columns for victim.parquet
+columns_for_victim = [
+    'incident_id',
+    'victim_id',
+    'victim_type_id',
+    'assignment_type_id',
+    'activity_type_id',
+    'age_num',
+    'sex_code',
+    'race_id',
+    'ethnicity_id'
+]
+
+# Columns for relationship.parquet
+columns_for_relationship = [
+    'incident_id',
+    'victim_id',
+    'offender_id',
+    'relationship_id',
+    'relationship_code',
+    'relationship_name'
+]
+
+# Mapping for column renaming (if needed)
 map_original_column_to_target = {
     'incident_id': 'incident_id',
-    'property_value': 'property_value',
-    'prop_desc_name': 'property_description',
-    'prop_loss_desc': 'property_loss_description',
-    'crime_against': 'crime_against',
-    'offense_category_name': 'offense_category',
+    'data_year': 'year',
+    'offense_code': 'offense_code',
+    'offense_name': 'offense_name',
+    'location_id': 'location_id',
     'location_name': 'location',
-    'criminal_act_name': 'criminal_act',
+    'property_description': 'property_description',
+    'property_value': 'property_value',
+    'offender_id': 'offender_id',
+    'victim_id': 'victim_id',
+    'victim_type_id': 'victim_type_id',
+    'assignment_type_id': 'assignment_type_id',
+    'activity_type_id': 'activity_type_id',
     'age_num': 'age',
-    'race_desc': 'race_description',
-    'sex_code': 'sex'
+    'sex_code': 'sex',
+    'race_id': 'race_id',
+    'ethnicity_id': 'ethnicity_id',
+    'relationship_id': 'relationship_id',
+    'relationship_code': 'relationship_code',
+    'relationship_name': 'relationship_name'
 }

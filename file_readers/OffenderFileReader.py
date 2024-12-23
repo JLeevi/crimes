@@ -13,10 +13,10 @@ class OffenderFileReader(BaseFileReader):
 
     def merge_offender_to_df(self, to_df):
         assert self.incident_id_column in to_df.columns
-        offender_df = self.__get_offender_df()
+        offender_df = self.get_offender_df()
         return self.merge_dfs(to_df, offender_df, self.incident_id_column)
 
-    def __get_offender_df(self):
+    def get_offender_df(self):
         offender_df = self.read_as_dataframe(self.__offender_file)
         df_with_race = self.read_as_dataframe(self.__race_file)
         offender_df = pd.merge(
