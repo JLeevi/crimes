@@ -5,7 +5,7 @@ from file_readers.OffenseFileReader import OffenseFileReader
 from file_readers.LocationFileReader import LocationFileReader
 from file_readers.CriminalActFileReader import CriminalActFileReader
 from file_readers.OffenderFileReader import OffenderFileReader
-from constants.columns import columns_for_property_value_analysis, map_original_column_to_target
+from constants.columns import columns_to_keep, map_original_column_to_target
 
 
 def read_and_combine_data_to_single_dataframe():
@@ -36,4 +36,4 @@ def drop_duplicate_and_nan_incidents(parquet_path):
 
 def drop_unnecessary_columns(parquet_path):
     dataframe = pd.read_parquet(parquet_path)
-    return dataframe[columns_for_property_value_analysis].rename(columns=map_original_column_to_target)
+    return dataframe[columns_to_keep].rename(columns=map_original_column_to_target)

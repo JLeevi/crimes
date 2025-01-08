@@ -1,4 +1,4 @@
-columns_for_property_value_analysis = [
+columns_to_keep = [
     'incident_id',
     'property_value',
     'prop_desc_name',
@@ -9,7 +9,8 @@ columns_for_property_value_analysis = [
     'criminal_act_name',
     'age_num',
     'race_desc',
-    'sex_code'
+    'sex_code',
+    'relationship_name'
 ]
 
 map_original_column_to_target = {
@@ -23,5 +24,6 @@ map_original_column_to_target = {
     'criminal_act_name': 'criminal_act',
     'age_num': 'age',
     'race_desc': 'race_description',
-    'sex_code': 'sex'
+    'sex_code': 'sex',
+    'relationship_name': 'relationship'
 }
