@@ -5,8 +5,10 @@ if "/opt/airflow" not in sys.path:
 
 
 import airflow
+import json
 from handlers.database import insert_crimes_to_db
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
+from handlers.hate_crime import fetch_hate_crime_data
 from airflow.decorators import dag, task
 from utils.db_query import create_insert_crimes_sql_query
 from constants.columns import map_original_column_to_target
@@ -21,6 +23,7 @@ class FilePaths:
     crime_parquet_columns_of_interest = data_folder_path + \
         "crime_parquet_columns_of_interest.parquet"
     crime_sql_file_path = data_folder_path + "insert_crimes.sql"
+    hate_crime_json_path = data_folder_path + "hate_crime.json"
 
 
 @dag(
@@ -67,6 +70,12 @@ def ingest_crime_data():
     def _push_crimes_to_postgres():
         insert_crimes_to_db(FilePaths.crime_sql_file_path)
 
+    @task(task_id="ingest_hate_crime_json")
+    def _ingest_hate_crime_json():
+        hate_crime_json = fetch_hate_crime_data()
+        with open(FilePaths.hate_crime_json_path, "w") as f:
+            json.dump(hate_crime_json, f, indent=4)
+
     @task(task_id="end")
     def _dummy_end():
         pass
@@ -80,9 +89,18 @@ def ingest_crime_data():
     create_insert_query = _create_insert_crimes_sql_query(
         FilePaths.crime_parquet_columns_of_interest)
     push_to_postgres = _push_crimes_to_postgres()
+    ingest_hate_crime = _ingest_hate_crime_json()
     end = _dummy_end()
 
-    start >> process >> drop_duplicates >> drop_useless_columns >> create_insert_query >> push_to_postgres >> end
+    start >> \
+        process >> \
+        drop_duplicates >> \
+        drop_useless_columns >> \
+        create_insert_query >> \
+        push_to_postgres >> \
+        end
+
+    start >> ingest_hate_crime >> end
 
 
 ingest_crime_data()
