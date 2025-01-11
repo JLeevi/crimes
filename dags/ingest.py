@@ -12,18 +12,7 @@ from handlers.hate_crime import fetch_hate_crime_data
 from airflow.decorators import dag, task
 from utils.db_query import create_insert_crimes_sql_query
 from constants.columns import map_original_column_to_target
-
-
-class FilePaths:
-    airflow_path = "/opt/airflow"
-    data_folder_path = airflow_path + "/data/"
-
-    crime_parquet_path = data_folder_path + "crimes.parquet"
-    crime_parquet_no_duplicates_path = data_folder_path + "crimes_no_duplicates.parquet"
-    crime_parquet_columns_of_interest = data_folder_path + \
-        "crime_parquet_columns_of_interest.parquet"
-    crime_sql_file_path = data_folder_path + "insert_crimes.sql"
-    hate_crime_json_path = data_folder_path + "hate_crime.json"
+from constants.file_paths import FilePaths
 
 
 @dag(
