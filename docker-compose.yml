@@ -18,7 +18,8 @@
 
 version: "3"
 x-airflow-common: &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.1}
+  build: .
+  image: my_airflow_image:latest  # Specify your custom image name here
 
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -31,7 +32,7 @@ x-airflow-common: &airflow-common
     AIRFLOW_HOME: "/opt/airflow"
     AIRFLOW__CORE_dags_folder: "/opt/airflow/dags"
     AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    MONGO_DB_URI: ${MONGO_DB_URI:-}
     FBI_API_KEY: ${FBI_API_KEY:-}
 
   volumes:
@@ -178,7 +179,6 @@ services:
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
-      _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:${AIRFLOW_GID:-0}"
     volumes:
       - .:/sources
