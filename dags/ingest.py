@@ -28,7 +28,7 @@ class FilePaths:
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False
 )
-def crime_dag():
+def ingest_crime_data():
 
     @task(task_id="start")
     def _dummy_start():
@@ -85,4 +85,4 @@ def crime_dag():
     start >> process >> drop_duplicates >> drop_useless_columns >> create_insert_query >> push_to_postgres >> end
 
 
-crime_dag()
+ingest_crime_data()
