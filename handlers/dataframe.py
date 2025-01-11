@@ -37,3 +37,7 @@ def drop_duplicate_and_nan_incidents(parquet_path):
 def drop_unnecessary_columns(parquet_path):
     dataframe = pd.read_parquet(parquet_path)
     return dataframe[columns_to_keep].rename(columns=map_original_column_to_target)
+
+
+def get_crime_df(parquet_path):
+    return pd.read_parquet(parquet_path)
