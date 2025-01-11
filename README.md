@@ -4,6 +4,10 @@ in progress...
 
 ## Instructions for running the project
 
+#### 0. Prerequisites
+
+Copy the `.env.template` file to `.env` and fill in the necessary environment variables.
+
 #### 1. Download the FBI crime data
 
 1. Go to https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
