@@ -18,7 +18,7 @@ from handlers.dataframe import get_crime_df
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False
 )
-def transform_data():
+def transform():
 
     @task(task_id="start")
     def _dummy_start():
@@ -123,4 +123,4 @@ def transform_data():
     ] >> property_stats_to_mongo >> end
 
 
-transform_data()
+transform()
