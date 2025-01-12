@@ -1,7 +1,7 @@
 import json
 import os
 import pickle
-from redis import Redis
+from handlers.redis import get_cached_file, set_cached_file
 import requests
 
 data_path = "./data"
@@ -34,16 +34,15 @@ def fetch_hate_crime_data():
 
 
 def ingest_crime_csv(file_name: str, file_id: str):
-    redis_client = _get_redis_connection()
-    cached_csv = redis_client.get(file_name)
-    if cached_csv:
+    cached_file = get_cached_file(file_name)
+    if cached_file:
         print(f"Using cached file: {file_name}")
-        content = pickle.loads(cached_csv)
+        content = pickle.loads(cached_file)
         _save_csv(file_name, content)
     else:
         print(f"Downloading file: {file_name}")
         csv_data = _fetch_drive_file(file_name, file_id)
-        redis_client.set(file_name, pickle.dumps(csv_data))
+        set_cached_file(file_name, pickle.dumps(csv_data))
         _save_csv(file_name, csv_data)
 
 
@@ -74,9 +73,3 @@ def _get_offline_sample_crime_file(file_name: str):
 def _get_offline_sample_hate_crime():
     with open(sample_hate_crime_path, "r") as file:
         return json.load(file)
-
-
-def _get_redis_connection():
-    redis_client = Redis(host='redis', port=6379,
-                         db=0, decode_responses=False)
-    return redis_client
