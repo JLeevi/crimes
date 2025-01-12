@@ -7,10 +7,9 @@ if "/opt/airflow" not in sys.path:
 import airflow
 from airflow.decorators import dag, task
 from constants.file_paths import FilePaths
-from handlers.wrangling import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders, get_damage_statistics, get_most_expensive_crimes
+from handlers.transform import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders, get_damage_statistics, get_most_expensive_crimes, extract_offense_and_motive_counts
 from handlers.database import insert_hate_crimes_to_mongo, insert_crime_relationship_statistics_to_mongo, insert_property_statistics_to_mongo
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
-from handlers.wrangling import extract_offense_and_motive_counts
 from handlers.dataframe import get_crime_df
 
 
@@ -19,7 +18,7 @@ from handlers.dataframe import get_crime_df
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False
 )
-def wrangle_data():
+def transform_data():
 
     @task(task_id="start")
     def _dummy_start():
@@ -124,4 +123,4 @@ def wrangle_data():
     ] >> property_stats_to_mongo >> end
 
 
-wrangle_data()
+transform_data()
