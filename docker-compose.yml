@@ -48,7 +48,6 @@ x-airflow-common: &airflow-common
     - ./plugins:/opt/airflow/plugins
     - ./handlers:/opt/airflow/handlers
     - ./file_readers:/opt/airflow/file_readers
-    - ./utils:/opt/airflow/utils
     - ./constants:/opt/airflow/constants
     - ./data:/opt/airflow/data
     - ./notebooks:/opt/airflow/notebooks

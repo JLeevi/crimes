@@ -9,8 +9,6 @@ import json
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
 from handlers.hate_crime import fetch_hate_crime_data
 from airflow.decorators import dag, task
-from utils.db_query import create_insert_crimes_sql_query
-from constants.columns import map_original_column_to_target
 from constants.file_paths import FilePaths
 
 
@@ -42,18 +40,6 @@ def ingest_crime_data():
         dataframe.to_parquet(
             FilePaths.crime_parquet_columns_of_interest, index=False)
 
-    @task(task_id="create_insert_crimes_sql_query")
-    def _create_insert_crimes_sql_query(parquet_path):
-        df = get_crime_df(parquet_path)
-        df = df.head(10)
-        rows = df.values.tolist()
-        columns = map_original_column_to_target.values()
-        create_insert_crimes_sql_query(
-            columns,
-            rows,
-            FilePaths.crime_sql_file_path
-        )
-
     @task(task_id="ingest_hate_crime_json")
     def _ingest_hate_crime_json():
         hate_crime_json = fetch_hate_crime_data()
@@ -70,8 +56,6 @@ def ingest_crime_data():
         FilePaths.crime_parquet_path)
     drop_useless_columns = _drop_unnecessary_columns(
         FilePaths.crime_parquet_no_duplicates_path)
-    create_insert_query = _create_insert_crimes_sql_query(
-        FilePaths.crime_parquet_columns_of_interest)
     ingest_hate_crime = _ingest_hate_crime_json()
     end = _dummy_end()
 
@@ -79,7 +63,6 @@ def ingest_crime_data():
         process >> \
         drop_duplicates >> \
         drop_useless_columns >> \
-        create_insert_query >> \
         end
 
     start >> ingest_hate_crime >> end
