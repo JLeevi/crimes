@@ -21,6 +21,6 @@ def fetch_hate_crime_data():
 def extract_offense_and_motive_counts(json_path):
     with open(json_path, "r") as f:
         data = json.load(f)
-        offense_counts = data["bias_section"]["offense_type"]
+        offense_counts = data["bias_section"]["offender_race"]
         motive_counts = data["incident_section"]["bias"]
         return offense_counts, motive_counts
