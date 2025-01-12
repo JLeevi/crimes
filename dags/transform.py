@@ -98,11 +98,12 @@ def transform():
         FilePaths.crime_parquet_no_duplicates_path)
 
     hate_crime_stats = _extract_hate_crime_statistics()
+    hate_crime_relationship_stats = _extract_crime_relationship_statistics()
     hate_crimes_to_mongo = _upload_hate_crimes_to_mongo(
         hate_crime_stats["offense_counts"], hate_crime_stats["motive_counts"])
-    hate_crime_relationship_stats = _extract_crime_relationship_statistics()
     crime_relationship_stats_to_mongo = _upload_crime_relationship_statistics_to_mongo(
         hate_crime_relationship_stats["statistics_dict"])
+
     property_stats = _get_property_value_statistics()
     most_expensive_crimes = _get_most_expensive_crimes()
     property_stats_to_mongo = _upload_property_statistics_to_mongo(
@@ -119,7 +120,8 @@ def transform():
     start >> hate_crime_stats >> hate_crimes_to_mongo >> end
     start >> hate_crime_relationship_stats >> crime_relationship_stats_to_mongo >> end
     files_cleaned >> [
-        property_stats >> most_expensive_crimes
+        property_stats,
+        most_expensive_crimes
     ] >> property_stats_to_mongo >> end
 
 
