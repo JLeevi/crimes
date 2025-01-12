@@ -8,7 +8,7 @@ import airflow
 from airflow.decorators import dag, task
 from handlers.wrangling import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders, get_damage_statistics, get_most_expensive_crimes
 from handlers.database import insert_hate_crimes_to_mongo, insert_crime_relationship_statistics_to_mongo, insert_property_statistics_to_mongo
-from handlers.hate_crime import extract_offense_and_motive_counts
+from handlers.wrangling import extract_offense_and_motive_counts
 from handlers.dataframe import get_crime_df
 from constants.file_paths import FilePaths
 

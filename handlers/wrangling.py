@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 
 
@@ -50,6 +51,14 @@ def _get_relationship_statistics(dataframe, normalize):
     dataframe = dataframe.fillna(0)
     dataframe = dataframe.to_dict()
     return dataframe
+
+
+def extract_offense_and_motive_counts(json_path):
+    with open(json_path, "r") as f:
+        data = json.load(f)
+        offense_counts = data["bias_section"]["offender_race"]
+        motive_counts = data["incident_section"]["bias"]
+        return offense_counts, motive_counts
 
 
 def remove_empty_offenders(offender_statistics):
