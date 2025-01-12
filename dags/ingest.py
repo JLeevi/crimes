@@ -17,7 +17,7 @@ from constants.drive_ids import GoogleDriveIds
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False
 )
-def ingest_crime_data():
+def ingest():
 
     @task(task_id="start")
     def _dummy_start():
@@ -47,4 +47,4 @@ def ingest_crime_data():
     start >> ingest_hate_crime >> end
 
 
-ingest_crime_data()
+ingest()
