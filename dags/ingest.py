@@ -6,7 +6,6 @@ if "/opt/airflow" not in sys.path:
 
 import airflow
 import json
-from handlers.database import insert_crimes_to_db
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
 from handlers.hate_crime import fetch_hate_crime_data
 from airflow.decorators import dag, task
@@ -55,10 +54,6 @@ def ingest_crime_data():
             FilePaths.crime_sql_file_path
         )
 
-    @task(task_id="push_crimes_to_postgres")
-    def _push_crimes_to_postgres():
-        insert_crimes_to_db(FilePaths.crime_sql_file_path)
-
     @task(task_id="ingest_hate_crime_json")
     def _ingest_hate_crime_json():
         hate_crime_json = fetch_hate_crime_data()
@@ -77,7 +72,6 @@ def ingest_crime_data():
         FilePaths.crime_parquet_no_duplicates_path)
     create_insert_query = _create_insert_crimes_sql_query(
         FilePaths.crime_parquet_columns_of_interest)
-    push_to_postgres = _push_crimes_to_postgres()
     ingest_hate_crime = _ingest_hate_crime_json()
     end = _dummy_end()
 
@@ -86,7 +80,6 @@ def ingest_crime_data():
         drop_duplicates >> \
         drop_useless_columns >> \
         create_insert_query >> \
-        push_to_postgres >> \
         end
 
     start >> ingest_hate_crime >> end
