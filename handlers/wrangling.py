@@ -47,3 +47,7 @@ def _get_relationship_statistics(dataframe, normalize):
     dataframe = dataframe.fillna(0)
     dataframe = dataframe.to_dict()
     return dataframe
+
+
+def remove_empty_offenders(offender_statistics):
+    return {k: v for k, v in offender_statistics.items() if k not in ["Not Specified", "Unknown"]}

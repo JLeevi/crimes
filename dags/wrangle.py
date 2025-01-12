@@ -6,7 +6,7 @@ if "/opt/airflow" not in sys.path:
 
 import airflow
 from airflow.decorators import dag, task
-from handlers.wrangling import filter_empty_relationships, group_by_relationship_and_offense
+from handlers.wrangling import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders
 from handlers.database import insert_hate_crimes_to_mongo, insert_crime_relationship_statistics_to_mongo
 from handlers.hate_crime import extract_offense_and_motive_counts
 from handlers.dataframe import get_crime_df
@@ -39,6 +39,7 @@ def wrangle_data():
     def _extract_hate_crime_statistics():
         offense_counts, motive_counts = extract_offense_and_motive_counts(
             FilePaths.hate_crime_json_path)
+        offense_counts = remove_empty_offenders(offense_counts)
         return {"offense_counts": offense_counts, "motive_counts": motive_counts}
 
     @task(task_id="upload_hate_crimes_to_mongo")
