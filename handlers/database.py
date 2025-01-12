@@ -20,3 +20,13 @@ def insert_crime_relationship_statistics_to_mongo(statistics_dict):
     db = client["crimes"]
     collection = db["crime_relationship_statistics"]
     collection.insert_one(statistics_dict)
+
+
+def get_crime_relationship_statistics_from_mongo():
+    uri = os.getenv("MONGO_DB_URI")
+    client = MongoClient(uri, server_api=ServerApi('1'))
+    db = client["crimes"]
+    collection = db["crime_relationship_statistics"]
+    output = collection.find_one(sort=[('_id', -1)])
+    output.pop("_id")
+    return output
