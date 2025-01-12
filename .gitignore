@@ -4,3 +4,5 @@ data
 __pycache__
 logs
 local_dependencies
+notebooks/.ipynb_checkpoints
+notebooks/*-prod.ipynb

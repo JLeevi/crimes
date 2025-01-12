@@ -34,6 +34,10 @@ x-airflow-common: &airflow-common
     AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
     MONGO_DB_URI: ${MONGO_DB_URI:-}
     FBI_API_KEY: ${FBI_API_KEY:-}
+    MPLCONFIGDIR: "/tmp/matplotlib-cache"
+    JUPYTER_RUNTIME_DIR: "/tmp/jupyter-runtime"
+    JUPYTER_DATA_DIR: "/tmp/jupyter-data"
+    JUPYTER_CONFIG_DIR: "/tmp/jupyter-config"
 
   volumes:
     - ./dags:/opt/airflow/dags
@@ -44,6 +48,7 @@ x-airflow-common: &airflow-common
     - ./utils:/opt/airflow/utils
     - ./constants:/opt/airflow/constants
     - ./data:/opt/airflow/data
+    - ./notebooks:/opt/airflow/notebooks
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
 
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
@@ -111,6 +116,8 @@ services:
   airflow-worker:
     <<: *airflow-common
     command: celery worker
+    ports:
+      - 8888:8888 # jupyter notebook
     healthcheck:
       test:
         - "CMD-SHELL"
