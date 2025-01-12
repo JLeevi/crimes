@@ -6,7 +6,7 @@ class BaseFileReader:
     def __init__(self):
         self.incident_id_column = "incident_id"
         self.__folder_path = os.path.join(
-            os.path.dirname(__file__), "../data/CA/")
+            os.path.dirname(__file__), "../data/crime-csvs/")
 
     def read_as_dataframe(self, file_name: str):
         df = pd.read_csv(self.__to_full_path(file_name))

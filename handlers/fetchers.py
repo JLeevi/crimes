@@ -1,4 +1,3 @@
-import json
 import os
 import requests
 
@@ -16,3 +15,11 @@ def fetch_hate_crime_data():
     response = requests.get(url, params=parameters)
     data = response.json()
     return data
+
+
+def fetch_crime_csv(file_name: str, file_id: str):
+    file_url = f"https://drive.google.com/uc?id={file_id}&export=download"
+    response = requests.get(file_url)
+    os.makedirs("./data/crime-csvs", exist_ok=True)
+    with open(f"./data/crime-csvs/{file_name}.csv", "wb") as file:
+        file.write(response.content)

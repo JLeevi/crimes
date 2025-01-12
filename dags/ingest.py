@@ -7,9 +7,10 @@ if "/opt/airflow" not in sys.path:
 import airflow
 import json
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
-from handlers.hate_crime import fetch_hate_crime_data
+from handlers.fetchers import fetch_hate_crime_data, fetch_crime_csv
 from airflow.decorators import dag, task
 from constants.file_paths import FilePaths
+from constants.drive_ids import GoogleDriveIds
 
 
 @dag(
@@ -21,6 +22,10 @@ def ingest_crime_data():
 
     @task(task_id="start")
     def _dummy_start():
+        pass
+
+    @task(task_id="files_downloaded")
+    def _files_downloaded():
         pass
 
     @task(task_id="create_and_save_crime_csv")
@@ -51,6 +56,7 @@ def ingest_crime_data():
         pass
 
     start = _dummy_start()
+    files_downloaded = _files_downloaded()
     process = _create_and_save_crime_parquet()
     drop_duplicates = _drop_duplicate_and_nan_incidents(
         FilePaths.crime_parquet_path)
@@ -59,7 +65,14 @@ def ingest_crime_data():
     ingest_hate_crime = _ingest_hate_crime_json()
     end = _dummy_end()
 
-    start >> \
+    for file_name, file_id in GoogleDriveIds.get_drive_files():
+        @task(task_id=f"download_{file_name}")
+        def _download_file(file_name, file_id):
+            fetch_crime_csv(file_name, file_id)
+
+        start >> _download_file(file_name, file_id) >> files_downloaded
+
+    files_downloaded >> \
         process >> \
         drop_duplicates >> \
         drop_useless_columns >> \
