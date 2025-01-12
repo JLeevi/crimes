@@ -17,4 +17,4 @@ class GoogleDriveIds:
     NIBRS_CRIMINAL_ACT_TYPE = "1TVUzbges6pPGWMeuqOYLEx6INQm0bxtR"
 
     def get_drive_files():
-        return [(key, value) for key, value in GoogleDriveIds.__dict__.items() if not key.startswith("__")]
+        return [(key, value) for key, value in GoogleDriveIds.__dict__.items() if not key.startswith("__") and not callable(value)]
