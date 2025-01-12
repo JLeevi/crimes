@@ -50,6 +50,7 @@ x-airflow-common: &airflow-common
     - ./file_readers:/opt/airflow/file_readers
     - ./constants:/opt/airflow/constants
     - ./data:/opt/airflow/data
+    - ./data-sample:/opt/airflow/data-sample
     - ./notebooks:/opt/airflow/notebooks
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
 
