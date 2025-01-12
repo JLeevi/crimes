@@ -6,7 +6,7 @@ if "/opt/airflow" not in sys.path:
 
 import airflow
 import json
-from handlers.fetchers import fetch_hate_crime_data, fetch_crime_csv
+from handlers.fetchers import fetch_hate_crime_data, ingest_crime_csv
 from airflow.decorators import dag, task
 from constants.file_paths import FilePaths
 from constants.drive_ids import GoogleDriveIds
@@ -40,7 +40,7 @@ def ingest():
     for file_name, file_id in GoogleDriveIds.get_drive_files():
         @task(task_id=f"download_{file_name}")
         def _download_file(file_name, file_id):
-            fetch_crime_csv(file_name, file_id)
+            ingest_crime_csv(file_name, file_id)
 
         start >> _download_file(file_name, file_id) >> end
 

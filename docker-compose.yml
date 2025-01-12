@@ -58,6 +58,7 @@ x-airflow-common: &airflow-common
   depends_on:
     - postgres
     - mongo
+    - redis
 
 services:
   postgres:
