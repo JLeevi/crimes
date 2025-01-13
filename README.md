@@ -2,7 +2,7 @@
 
 This project examines the impact of a government-sanctioned Purge taking place in California. Using real-time data on crime patterns, offenders, and victims, we analyze the effects on society to highlight how such an event would alter communities and individual safety.
 
-## Research Questions
+## Project Anlysis Questions
 
 We aim to answer the following questions:
 
@@ -88,3 +88,14 @@ make stop
 - Analyzes data using Pandas, NumPy, or SciPy
 - Creates visualizations with Matplotlib
 - Generates insights and summaries in a Jupyter notebook
+
+### :hammer_and_wrench: Used Technologies for the project :
+
+<div>
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/airflow.png" title="Airflow" alt="Airflow" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/docker.png" title="Docker" alt="Docker" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/mongodb.png" title="MongoDB" alt="MongoDB" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/redis.png" title="Redis" alt="Redis" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/pandas.png" title="Pandas" alt="Pandas" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/jupyter.png" title="Jupyter Notebook" alt="Jupyter Notebook" width="40" height="40"/>
+</div>
