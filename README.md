@@ -27,9 +27,16 @@ Username and password for airflow are defined in the `.env` file.
 
 The project contains three pipelines:
 
-1. `ingest` - Ingests data from the FBI API and stores them in temporary files
+1. `ingest` - Ingests data from the FBI API and stores them in temporary files:
+
+    This pipeline is responsible for retrieving raw data from the FBI API and saving it in temporary storage for further processing. This stage serves as the entry point for the data pipeline. Key steps include:
+
+        - Accessing the FBI API: The pipeline establishes a connection to the API and performs GET requests to fetch the required data.
+        - Data Storage: The retrieved data is stored temporarily in local files (e.g., JSON or CSV format) within a dedicated directory. This allows for easy inspection and prevents repeated API calls during testing or development.
+        - Error Handling: Mechanisms are in place to handle issues such as API timeouts, rate limiting, or missing data.
+   
 2. `transform` - Cleans and transforms the data from the temporary files and stores them in a MongoDB database
-3. `publish` - Loads the data from the MongoDB database to a Jupyter notebook, which creates plots and tables to analyze the data
+4. `publish` - Loads the data from the MongoDB database to a Jupyter notebook, which creates plots and tables to analyze the data
 
 ##### 1.2. Viewing the results
 
