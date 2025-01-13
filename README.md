@@ -92,7 +92,7 @@ make stop
 ### :hammer_and_wrench: Used Technologies for the project :
 
 <div>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png" title="Airflow" alt="Airflow" width="70" height="40"/>&nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png" title="Airflow" alt="Airflow" width="100" height="40"/>&nbsp;
   <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/docker.png" title="Docker" alt="Docker" width="40" height="40"/>&nbsp;
   <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/mongodb.png" title="MongoDB" alt="MongoDB" width="40" height="40"/>&nbsp;
   <img src="https://github.com/marwin1991/profile-technology-icons/blob/main/icons/redis.png" title="Redis" alt="Redis" width="40" height="40"/>&nbsp;
