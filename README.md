@@ -11,7 +11,9 @@ Copy the `.env.template` file to `.env` and fill in the necessary environment va
 Ask one of the project owners for the `FBI_API_KEY`.
 
   **Data Sources**: 
+      
       - For CSV files : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
+      
       - For FBI Crime Data API : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/docApi
 
 #### 1. Start the project
