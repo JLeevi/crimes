@@ -12,8 +12,7 @@ from io import BytesIO
 from constants.file_paths import FilePaths
 from handlers.transform import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders, get_damage_statistics, get_most_expensive_crimes, extract_offense_and_motive_counts
 from handlers.database import insert_hate_crimes_to_mongo, insert_crime_relationship_statistics_to_mongo, insert_property_statistics_to_mongo
-from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
-from handlers.dataframe import get_crime_df
+from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df, is_partial_sample_file
 from handlers.redis import get_cached_file, set_cached_file
 
 
@@ -106,7 +105,8 @@ def transform():
     @task(task_id="set_cleaned_file_to_cache")
     def _set_cleaned_file_to_cache():
         df = pd.read_parquet(FilePaths.crime_parquet_columns_of_interest)
-        set_cached_file(FilePaths.final_file_name, df.to_parquet())
+        if not is_partial_sample_file(df):
+            set_cached_file(FilePaths.final_file_name, df.to_parquet())
 
     start = _dummy_start()
     get_cleaned_file_from_cache = _get_cleaned_file_from_cache()

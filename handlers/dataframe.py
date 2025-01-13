@@ -41,3 +41,7 @@ def drop_unnecessary_columns(parquet_path):
 
 def get_crime_df(parquet_path):
     return pd.read_parquet(parquet_path)
+
+
+def is_partial_sample_file(dataframe):
+    return len(dataframe) < 1000
