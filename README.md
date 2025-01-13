@@ -1,79 +1,90 @@
 # Project for INSA Lyon course Data Engineering IF5OT7
 
-in progress...
+This project examines the impact of a government-sanctioned Purge taking place in California. Using real-time data on crime patterns, offenders, and victims, we analyze the effects on society to highlight how such an event would alter communities and individual safety.
 
-## Instructions for running the project
+## Research Questions
 
-#### 0. Prerequisites
+We aim to answer the following questions:
 
-Copy the `.env.template` file to `.env` and fill in the necessary environment variables.
+- What are the crimes people are most likely to commit based on their relationship with the victims?
+- What are the most damaging types of crimes financially based on properties involved?
+- How much do one's race, religion, and other characteristics put them at risk of being targeted?
 
-Ask one of the project owners for the `FBI_API_KEY`.
+## Instructions for Running the Project
 
-  **Data Sources**: 
-      
-      - For CSV files : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
-      
-      - For FBI Crime Data API : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/docApi
+### Prerequisites
 
-#### 1. Start the project
+1. Copy the `.env.template` file to `.env` and fill in the necessary environment variables.
+2. Ask one of the project owners for the `FBI_API_KEY`.
+
+**Data Sources**:
+- CSV files: https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
+- FBI Crime Data API: https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/docApi
+
+### Starting the Project
+
+To start the project, run:
 
 ```bash
 make start
 ```
 
-- Creates a docker container with the project's dependencies.
-- Starts an airflow server at `http://localhost:8080/`.
+This command:
+- Creates a Docker container with the project's dependencies.
+- Starts an Airflow server at http://localhost:8080/.
 
-Go to the url to view the available DAGs and run them.
+Go to the URL to view the available DAGs and run them. The username and password for Airflow are defined in the `.env` file.
 
-Username and password for airflow are defined in the `.env` file.
-
-##### 1.1. Running the pipelines
+### Running the Pipelines
 
 The project contains three pipelines:
 
-1. `ingest` - Ingests data from the CSV files and FBI API and stores them in temporary files :
-   This pipeline is responsible for retrieving raw data from the FBI API and downloaded CSV files and saving it in temporary storage for further processing. This stage serves as the entry point for the data pipeline. Key steps include:
+1. **Ingest**: Retrieves data from CSV files and FBI API, storing it in temporary files.
+2. **Transform**: Cleans and transforms the data, storing it in a MongoDB database.
+3. **Publish**: Loads data from MongoDB to a Jupyter notebook for analysis and visualization.
 
-    - Fetching Data from CSV Files: The pipeline imports raw data directly from CSV files for further processing.
-    - Accessing the FBI API: The pipeline establishes a connection to the API and performs GET requests to fetch the required data.
-    - Data Storage: The retrieved data is stored temporarily in local files. This allows for easy inspection and prevents repeated API calls during testing or development.
-    - Error Handling: Mechanisms are in place to handle issues such as API timeouts, rate limiting, or missing data.
-   
-2. `transform` - Cleans and transforms the data from the temporary files and stores them in a MongoDB database :
+### Viewing the Results
 
-    - Data Cleaning: Fixing data inconsistencies such as missing values, incorrect formats, or duplicate entries.
-    - Data Transformation: Reshaping or aggregating data as needed for downstream analysis.
-    - Data Validation: Ensuring that the data adheres to expected schema definitions and constraints.
-    - MongoDB Storage: The cleaned and structured data is stored in a MongoDB database for easy querying and retrieval during the next pipeline stage.
+After running all pipelines, access the Jupyter notebook at http://localhost:8888/. Select `notebook-prod.ipynb` to view the results.
 
-3. `publish` - Loads the data from the MongoDB database to a Jupyter notebook, which creates plots and tables to analyze the data :
+### Local Development
 
-    - Data Retrieval: Queries the MongoDB database to extract relevant datasets for analysis.
-    - Data Analysis: Processes the data in Jupyter notebooks using libraries such as Pandas, NumPy, or SciPy to compute statistics, correlations, or trends.
-    - Visualization: Creates plots and tables using libraries like Matplotlib to summarize the data visually.
-    - Reporting: Outputs insights, summaries, and findings to facilitate decision-making or further exploration.
+To copy dependencies from the container for local development, run:
 
-
-##### 1.2. Viewing the results
-
-After running all the pipelines, the `publish` pipeline has created a Jupyter notebook with the results. You can view the notebook at `http://localhost:8888/`. Select the notebook `notebook-prod.ipynb` to view the results.
-
-#### 2. Copy dependencies from the container for local development
 
 ```bash
 make copy-dependencies
 ```
 
-This copies the container dependencies to the ./local_dependencies directory.
+This copies the container dependencies to the `./local_dependencies` directory, enabling autocomplete and other features while developing locally.
 
-This makes autocomplete and other stuff work with the dependencies while developing locally.
+### Stopping the Project
 
-#### 3. Stop the project
+To stop and remove all project Docker containers, run:
+
 
 ```bash
 make stop
 ```
 
-When done, run this to stop and remove all the project's docker containers.
+## Pipeline Details
+
+### 1. Ingest Pipeline
+
+- Fetches data from CSV files and FBI API
+- Stores raw data in temporary files
+- Handles errors such as API timeouts and rate limiting
+
+### 2. Transform Pipeline
+
+- Cleans data (fixes inconsistencies, missing values, etc.)
+- Transforms data for analysis
+- Validates data against schema definitions
+- Stores cleaned data in MongoDB
+
+### 3. Publish Pipeline
+
+- Retrieves data from MongoDB
+- Analyzes data using Pandas, NumPy, or SciPy
+- Creates visualizations with Matplotlib
+- Generates insights and summaries in a Jupyter notebook
