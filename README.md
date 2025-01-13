@@ -8,40 +8,34 @@ in progress...
 
 Copy the `.env.template` file to `.env` and fill in the necessary environment variables.
 
-#### 1. Download the FBI crime data
+Ask one of the project owners for the `FBI_API_KEY`.
 
-1. Go to https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
-2. Scroll to section "Crime Incident-Based Data by State"
-3. Select "California" and "2023" and click "Download"
-4. A "CA" folder should have been downloaded, move that to ./data directory
-5. You should have the following structure:
-
-```
-data
-└── CA
-    ├── agencies.csv
-    ├── NIBRS_ACTIVITY_TYPE.csv
-    ├── ...
-├── ...
-├── dags
-├── file_readers
-└── handlers
-```
-
-#### 2. Start the project
+#### 1. Start the project
 
 ```bash
 make start
 ```
 
 - Creates a docker container with the project's dependencies.
-- Starts an airflow server at `http://localhost:8080/`, along with a postgres database.
+- Starts an airflow server at `http://localhost:8080/`.
 
 Go to the url to view the available DAGs and run them.
 
 Username and password for airflow are defined in the `.env` file.
 
-#### 3. Copy dependencies from the container for local development
+##### 1.1. Running the pipelines
+
+The project contains three pipelines:
+
+1. `ingest` - Ingests data from the FBI API and stores them in temporary files
+2. `transform` - Cleans and transforms the data from the temporary files and stores them in a MongoDB database
+3. `publish` - Loads the data from the MongoDB database to a Jupyter notebook, which creates plots and tables to analyze the data
+
+##### 1.2. Viewing the results
+
+After running all the pipelines, the `publish` pipeline has created a Jupyter notebook with the results. You can view the notebook at `http://localhost:8888/`. Select the notebook `notebook-prod.ipynb` to view the results.
+
+#### 2. Copy dependencies from the container for local development
 
 ```bash
 make copy-dependencies
@@ -51,7 +45,7 @@ This copies the container dependencies to the ./local_dependencies directory.
 
 This makes autocomplete and other stuff work with the dependencies while developing locally.
 
-#### 4. Stop the project
+#### 3. Stop the project
 
 ```bash
 make stop
