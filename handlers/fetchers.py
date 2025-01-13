@@ -41,9 +41,10 @@ def ingest_crime_csv(file_name: str, file_id: str):
         _save_csv(file_name, content)
     else:
         print(f"Downloading file: {file_name}")
-        csv_data = _fetch_drive_file(file_name, file_id)
-        set_cached_file(file_name, pickle.dumps(csv_data))
+        csv_data, is_full_file = _fetch_drive_file(file_name, file_id)
         _save_csv(file_name, csv_data)
+        if is_full_file:
+            set_cached_file(file_name, pickle.dumps(csv_data))
 
 
 def _fetch_drive_file(file_name: str, file_id: str):
@@ -52,11 +53,11 @@ def _fetch_drive_file(file_name: str, file_id: str):
         response = requests.get(file_url)
         if response.status_code != 200:
             raise Exception(f"Failed to download file: {file_name}")
-        return response.content
+        return response.content, True
     except Exception as e:
         print(f"Failed to download file: {file_name}")
         print(f"Using offline sample file instead")
-        return _get_offline_sample_crime_file(file_name)
+        return _get_offline_sample_crime_file(file_name), False
 
 
 def _save_csv(file_name: str, content: bytes):
