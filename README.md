@@ -39,9 +39,9 @@ Go to the URL to view the available DAGs and run them. The username and password
 
 The project contains three pipelines:
 
-1. **Ingest**: Retrieves data from CSV files and FBI API, storing it in temporary files.
-2. **Transform**: Cleans and transforms the data, storing it in a MongoDB database.
-3. **Publish**: Loads data from MongoDB to a Jupyter notebook for analysis and visualization.
+1. **Ingest**: Retrieves data from CSV files and FBI API, storing it in temporary files. (Ingestion Pipeline)
+2. **Transform**: Cleans and transforms the data, storing it in a MongoDB database. (Staging/Wrangling Pipeline)
+3. **Publish**: Loads data from MongoDB to a Jupyter notebook for analysis and visualization. (Production Pipeline)
 
 ### Viewing the Results
 
@@ -75,14 +75,14 @@ make stop
 - Stores raw data in temporary files
 - Handles errors such as API timeouts and rate limiting
 
-### 2. Transform Pipeline
+### 2. Transform Pipeline (Staging/Wrangling)
 
 - Cleans data (fixes inconsistencies, missing values, etc.)
 - Transforms data for analysis
 - Validates data against schema definitions
 - Stores cleaned data in MongoDB
 
-### 3. Publish Pipeline
+### 3. Publish Pipeline (Production)
 
 - Retrieves data from MongoDB
 - Analyzes data using Pandas, NumPy, or SciPy
