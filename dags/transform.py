@@ -5,12 +5,16 @@ if "/opt/airflow" not in sys.path:
 
 
 import airflow
+import pandas as pd
 from airflow.decorators import dag, task
+from airflow.utils.edgemodifier import Label
+from io import BytesIO
 from constants.file_paths import FilePaths
 from handlers.transform import filter_empty_relationships, group_by_relationship_and_offense, remove_empty_offenders, get_damage_statistics, get_most_expensive_crimes, extract_offense_and_motive_counts
 from handlers.database import insert_hate_crimes_to_mongo, insert_crime_relationship_statistics_to_mongo, insert_property_statistics_to_mongo
 from handlers.dataframe import read_and_combine_data_to_single_dataframe, drop_duplicate_and_nan_incidents, drop_unnecessary_columns, get_crime_df
 from handlers.dataframe import get_crime_df
+from handlers.redis import get_cached_file, set_cached_file
 
 
 @dag(
@@ -41,7 +45,7 @@ def transform():
         dataframe.to_parquet(
             FilePaths.crime_parquet_columns_of_interest, index=False)
 
-    @task(task_id="files_cleaned")
+    @task(task_id="files_cleaned", trigger_rule="none_failed_min_one_success")
     def _files_cleaned():
         pass
 
@@ -88,7 +92,24 @@ def transform():
     def _dummy_end():
         pass
 
+    @task.branch(task_id="get_cleaned_file_from_cache")
+    def _get_cleaned_file_from_cache():
+        file_bytes = get_cached_file(FilePaths.final_file_name)
+        if file_bytes:
+            file_buffer = BytesIO(file_bytes)
+            df = pd.read_parquet(file_buffer)
+            df.to_parquet(
+                FilePaths.crime_parquet_columns_of_interest, index=False)
+            return "files_cleaned"
+        return "create_and_save_crime_csv"
+
+    @task(task_id="set_cleaned_file_to_cache")
+    def _set_cleaned_file_to_cache():
+        df = pd.read_parquet(FilePaths.crime_parquet_columns_of_interest)
+        set_cached_file(FilePaths.final_file_name, df.to_parquet())
+
     start = _dummy_start()
+    get_cleaned_file_from_cache = _get_cleaned_file_from_cache()
     files_cleaned = _files_cleaned()
 
     process = _create_and_save_crime_parquet()
@@ -96,6 +117,7 @@ def transform():
         FilePaths.crime_parquet_path)
     drop_useless_columns = _drop_unnecessary_columns(
         FilePaths.crime_parquet_no_duplicates_path)
+    cache_cleaned_file = _set_cleaned_file_to_cache()
 
     hate_crime_stats = _extract_hate_crime_statistics()
     hate_crimes_to_mongo = _upload_hate_crimes_to_mongo(
@@ -112,10 +134,16 @@ def transform():
 
     end = _dummy_end()
 
-    start >> \
+    start >> get_cleaned_file_from_cache >> \
+        Label("Found cached file") >> \
+        files_cleaned
+
+    start >> get_cleaned_file_from_cache >> \
+        Label("Cached file not found") >> \
         process >> \
         drop_duplicates >> \
         drop_useless_columns >> \
+        cache_cleaned_file >> \
         files_cleaned
 
     start >> hate_crime_stats >> hate_crimes_to_mongo >> end
