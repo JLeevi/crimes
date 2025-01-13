@@ -10,6 +10,10 @@ Copy the `.env.template` file to `.env` and fill in the necessary environment va
 
 Ask one of the project owners for the `FBI_API_KEY`.
 
+  **Data Sources**: 
+      - For CSV files : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/downloads
+      - For FBI Crime Data API : https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/docApi
+
 #### 1. Start the project
 
 ```bash
@@ -27,9 +31,10 @@ Username and password for airflow are defined in the `.env` file.
 
 The project contains three pipelines:
 
-1. `ingest` - Ingests data from the FBI API and stores them in temporary files :
-   This pipeline is responsible for retrieving raw data from the FBI API and saving it in temporary storage for further processing. This stage serves as the entry point for the data pipeline. Key steps include:
+1. `ingest` - Ingests data from the CSV files and FBI API and stores them in temporary files :
+   This pipeline is responsible for retrieving raw data from the FBI API and downloaded CSV files and saving it in temporary storage for further processing. This stage serves as the entry point for the data pipeline. Key steps include:
 
+    - Fetching Data from CSV Files: The pipeline imports raw data directly from CSV files for further processing.
     - Accessing the FBI API: The pipeline establishes a connection to the API and performs GET requests to fetch the required data.
     - Data Storage: The retrieved data is stored temporarily in local files. This allows for easy inspection and prevents repeated API calls during testing or development.
     - Error Handling: Mechanisms are in place to handle issues such as API timeouts, rate limiting, or missing data.
